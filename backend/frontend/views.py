@@ -45,7 +45,6 @@ def save_screenshot(request):
 
     filename = f"screenshot_{uuid.uuid4().hex[:10]}.{ext}"
 
-    # Сохраняем файл на диск (media/screenshots/)
     file_data = ContentFile(base64.b64decode(imgstr), name=filename)
 
     from django.core.files.storage import default_storage
@@ -70,7 +69,7 @@ def set_flag_true_by_value(request):
         return Response({'status': 'success', 'id': number.id, 'value': number.value, 'flag': number.flag})
     except Number.DoesNotExist:
         return Response({'status': 'error', 'message': f'Number with value={number_value} not found'}, status=404)
-# API: возвращаем все настройки
+
 @api_view(['GET'])
 def get_settings(request):
     settings = Setting.objects.all()
