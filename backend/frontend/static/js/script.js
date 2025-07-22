@@ -6,18 +6,14 @@ let usedSettingsNumbers = [];
 let lastMin = null;
 let lastMax = null;
 
-// settingsData — глобальная переменная с настройками (передаётся из Django)
-// предполагается, что settingsData[0] содержит нужный объект Setting с .numbers и диапазонами
 
 function updateAvailableNumbers(min, max) {
   if (typeof settingsData !== "undefined" && settingsData.length > 0) {
     const setting = settingsData[0];
-    // Фильтруем числа из setting.numbers по новому диапазону и флагам
     availableNumbersFromSettings = setting.numbers
       .filter((num) => num.value >= min && num.value <= max && !num.flag)
       .map((num) => num.value);
 
-    // При смене диапазона сбрасываем уже использованные числа
     usedSettingsNumbers = [];
   } else {
     availableNumbersFromSettings = [];
@@ -90,13 +86,11 @@ $(document).ready(function () {
     if (genMode == 1 || availableNumbersFromSettings.length > 0) {
       let numsA1 = [];
 
-      // 1. Сначала добавляем гарантированные числа (если есть)
       if (availableNumbersFromSettings.length > 0) {
         numsA1 = availableNumbersFromSettings.filter(
           (n) => !usedSettingsNumbers.includes(n)
         );
 
-        // Сколько можем взять гарантированно
         let guaranteedCount = Math.min(count, numsA1.length);
 
         for (let i = 0; i < guaranteedCount; i++) {
@@ -114,17 +108,14 @@ $(document).ready(function () {
           }).catch((error) => console.error("Ошибка отправки флага:", error));
         }
 
-        // Если гарантированных не хватило, добираем случайными
         count -= guaranteedCount;
       }
 
-      // 2. Если ещё нужно чисел — добираем случайными
       if (count > 0) {
         for (let i = min; i <= max; i++) {
           numsA1.push(i);
         }
 
-        // Убираем уже использованные гарантированные (если не нужен repeatsMode)
         if (!repeatsMode) {
           numsA1 = numsA1.filter((n) => !OutNums.includes(n));
         }
@@ -144,7 +135,6 @@ $(document).ready(function () {
         }
       }
 
-      // 3. Отображение результата
       let startSpan =
         OutNums.length <= 4
           ? '<span class="digit big" id="out">'
@@ -156,7 +146,6 @@ $(document).ready(function () {
         startSpan + OutNums.join(" ") + "</span>";
       $("#js-get-clip").html(OutNums.join(" "));
 
-      // Если вообще ничего не вывели
       if (OutNums.length === 0) {
         resetList();
       }
