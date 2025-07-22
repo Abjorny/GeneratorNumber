@@ -1,0 +1,116 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure,figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;}
+
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {display: block;}
+body {line-height: 1;}
+ol, ul {list-style: none;}
+blockquote, q {quotes: none;}
+blockquote:before, blockquote:after, q:before, q:after {content: '';content: none;}
+table {border-collapse: collapse;border-spacing: 0;}
+
+@font-face {
+	font-family: 'myriad-pro';
+	src: url("../fonts/Myriad-Pro-Light.ttf");
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'myriad-pro';
+	src: url("../fonts/Myriad-Pro.ttf");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'myriad-pro';
+	src: url("../fonts/Myriad-Pro-Semibold.ttf");
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'myriad-pro';
+	src: url("../fonts/Myriad-Pro-Bold.ttf");
+	font-weight: 600;
+	font-style: normal;
+}
+
+body{font-family: 'myriad-pro'; font-weight: 300; text-align:center; font-size:17px; letter-spacing:1px; min-width:720px; min-height:100vh; display:flex; background:#fff;color:#000;}
+
+.overlay {width:740px; margin:0 auto; padding:25px 10px 20px 10px; box-sizing:border-box;margin:auto;color:#000; min-height:925px}
+
+/*Øàïêà*/
+.main-title {font-size:28px; margin-bottom:2px; text-transform:uppercase; letter-spacing:2px; color:#000}
+.sub-title {font-size:38px;color:#000}
+	.sub-title strong {display:block; font-size:34px;font-weight: 600;letter-spacing:0px;margin-top:8px}
+
+.string {width:620px; height:6px; background:url(../images/string.png); margin:10px auto 20px auto;}
+
+/*Òåëî ãåíåðàòîðà*/
+.out {padding:25px 0px;display: flex;flex-wrap: wrap;justify-content:center;}
+	.digit {font-size:153px;font-weight: 400; margin-bottom:20px; text-align:center; margin:0 20px 20px 20px}
+		.digit.middle {font-size:100px;  min-width:27%;}
+		.digit.small {font-size:72px; min-width:27%;}
+		.digit.big {min-width:100%; text-align:center}
+			.digit font {font-size:1px; opacity:0;}
+
+.btn-bold {border:3px solid #000; border-radius:5px; font-size:20px; font-weight: 500; display:table; margin:0px auto 15px auto; padding:18px 20px;transition:.0.8s; user-select:none}
+	.btn-bold:hover {cursor:pointer; }
+		.btn-bold:active{box-shadow:inset 0px 7px 4px 0px rgba(28,39,41, 0.38);}
+
+	
+.time {font-size:13px;}
+
+.string2 {width:318px; height:7px; background:url(../images/string2.png); margin:8px auto 30px auto;}
+
+	
+/*Ïîëÿ */		
+.title{font-size:19px; font-weight:400; letter-spacing:1.5px; margin-bottom:13px}
+
+.wrapper {margin:0 auto 25px auto;}
+	.wrapper span {margin: 0 15px }
+	
+		.wrapper input {width:190px; color:#878382; font-size:20px; font-weight:400; padding:5px 10px; box-sizing:border-box; border:1px solid #4d4d4d; border-radius:5px; outline:0; font-family: 'myriad-pro'; text-align:center}
+			.wrapper input:focus {outline:none; color:#000}
+
+
+.check-row 	{user-select: none; margin:-15px auto 25px auto}		
+	.checkbox  {display:none;}
+		.checkbox  + label span {display:inline-block;width:18px;height:18px;background:url(../images/not-check.png);cursor:pointer; position:relative; top:3px; left:4px}
+			.checkbox:checked + label span {background:url(../images/check.png) ;}
+
+		
+		
+.btn {border:1px solid #000; border-radius:5px; font-size:14px; font-weight: 300; display:table; margin:30px 5px ; padding:10px 20px;transition:.2s; display:inline-block; letter-spacing:0.5px; user-select:none}
+	.btn:hover {cursor:pointer;}
+		.btn:active {box-shadow:inset 0px 2px 4px 0px rgba(28,39,41, 0.75);}
+
+
+
+#time-stop {display:none}
+#js-get-clip {font-size:0!important; width:0px; height:0px; opacity:0}
+	#js-get-clip .digit {font-size:0!important;}
+	
+
+.out-outer {position:relative}	
+	.out {position:absolute; width:100%;}
+	.out-hide {padding:25px 0px;display: flex;flex-wrap: wrap;justify-content:center; opacity:0}
+/*Ñîö êíîïêè*/
+.pluso {display:block !important; text-align:center !important;}
+	.pluso-wrap a {display:inline-block !important; width:40px !important; height:40px !important;margin:0 11px !important;background-position:0 0 !important; background-position:center center !important}
+		.pluso-google{background-image:url(../images/soc/google.png) !important;}
+		.pluso-twitter{background-image:url(../images/soc/tw.png) !important;}
+		.pluso-email{background-image:url(../images/soc/email.png) !important;}
+		.pluso-facebook{background-image:url(../images/soc/fb.png) !important;}
+		.pluso-print{ background-image:url(../images/soc/rss.png) !important; }
+		.pluso-vkontakte{background-image:url(../images/soc/vk.png) !important;}
+		.pluso-moimir{background-image:url(../images/soc/mail.png) !important;}
+		.pluso-yandex{background-image:url(../images/soc/ya.png) !important;}
+		.pluso-livejournal{background-image:url(../images/soc/lj.png) !important;}
+		.pluso-odnoklassniki{background-image:url(../images/soc/ok.png) !important;}
+		
+		.pluso-wrap .pluso-more {display:none !important}
+		
+	.pluso-wrap a:hover {opacity:0.8}
+	
