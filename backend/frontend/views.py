@@ -73,5 +73,21 @@ def set_flag_true_by_value(request):
 @api_view(['GET'])
 def get_settings(request):
     settings = Setting.objects.all()
-    serializer = SettingSerializer(settings, many=True)
-    return Response(serializer.data)
+    result = []
+
+    for setting in settings:
+        ordered_numbers = [sn.number for sn in setting.settingnumber_set.all().order_by('order')]
+
+        numbers_data = [{'id': num.id, 'value': num.value, 'flag': num.flag} for num in ordered_numbers]
+
+        result.append({
+            'setting_id': setting.id,
+            'numbers': numbers_data,
+        })
+
+    return JsonResponse(
+        {
+            'settings_data': result,
+        }
+    )
+

@@ -9,11 +9,8 @@
 
     {{ settings_data|json_script:"settings-json" }}
 
-    <script>
-      const settingsData = JSON.parse(
-        document.getElementById("settings-json").textContent
-      );
-      console.log(settingsData);
+    <script id="settings-json" type="application/json">
+      {{ settings_data|json_script:"settings-json" }}
     </script>
 
     <script src="https://cdn.jsdelivr.net/clipboard.js/latest/clipboard.min.js"></script>
@@ -27,8 +24,6 @@
   </head>
 
   <body>
-    
-
     <script>
       $("body").on("input", ".input-range", function () {
         var value = this.value.replace(/[^\d]+/gi, "");
@@ -147,7 +142,74 @@
       <div class="btn js-clipboard" data-clipboard-target="#js-get-clip">
         СКОПИРОВАТЬ РЕЗУЛЬТАТ
       </div>
-      <div class="uSocial-Share" data-pid="0ef48b0f7d9acf4568b300c133226708" data-type="share" data-options="round-rect,style3,default,absolute,horizontal,size48,eachCounter0,counter0,nomobile,mobile_position_right" data-social="vk,ok,telegram,wa,bookmarks" data-key="0" data-url="https://xn--80akjcielidvhr6cf.xn--p1ai/" style="display: block;"><div class="uscl-bar uscl-round-rect uscl-style3 uscl-default uscl-absolute uscl-horizontal uscl-size48 uscl-eachCounter0 uscl-counter0 uscl-nomobile uscl-mobile_position_right"><div class="uscl-list"><div class="uscl-item"><span data-item="vk" title="Поделиться ВКонтакте" class="ico_uscl_soc ico_uscl ico_uscl-vk uscl-vk"></span></div><div class="uscl-item"><span data-item="ok" title="Поделиться в OK.ru" class="ico_uscl_soc ico_uscl ico_uscl-ok uscl-ok"></span></div><div class="uscl-item"><span data-item="telegram" title="Поделиться в Telegram" class="ico_uscl_soc ico_uscl ico_uscl-telegram uscl-telegram"></span></div><div class="uscl-item"><span data-item="wa" title="Поделиться в WhatsApp" class="ico_uscl_soc ico_uscl ico_uscl-wa uscl-wa"></span></div><div class="uscl-item--bookmarks uscl-item"><a data-item="bookmarks" href="#" rel="sidebar" title="случайное число.рф — простой удобный точный и понятный генератор случайных чисел" class="ico_uscl ico_uscl-bookmarks uscl-bookmarks"></a></div><div class="uscl-item uscl-slide"><span class="uscl-slide-close ico_uscl-arrow ico_uscl"></span></div></div><span class="uscl-slide-open ico_uscl-like"></span><div id="uSocial-popup" class="uscl-popup"><div class="uscl-popup-background"></div><div class="uscl-popup-dialog"><div class="uscl-popup-header"><div class="uscl-popup-headline"></div><span class="uscl-popup-close ico_uscl ico_uscl-close"></span></div><div class="uscl-popup-body"></div></div></div></div></div>
+      <div
+        class="uSocial-Share"
+        data-pid="0ef48b0f7d9acf4568b300c133226708"
+        data-type="share"
+        data-options="round-rect,style3,default,absolute,horizontal,size48,eachCounter0,counter0,nomobile,mobile_position_right"
+        data-social="vk,ok,telegram,wa,bookmarks"
+        data-key="0"
+        data-url="https://xn--80akjcielidvhr6cf.xn--p1ai/"
+        style="display: block"
+      >
+        <div
+          class="uscl-bar uscl-round-rect uscl-style3 uscl-default uscl-absolute uscl-horizontal uscl-size48 uscl-eachCounter0 uscl-counter0 uscl-nomobile uscl-mobile_position_right"
+        >
+          <div class="uscl-list">
+            <a target="_blank" href="https://vk.com/share.php?title=%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%BE%D0%B5%20%D1%87%D0%B8%D1%81%D0%BB%D0%BE.%D1%80%D1%84%20%E2%80%94%20%D0%BF%D1%80%D0%BE%D1%81%D1%82%D0%BE%D0%B9%20%D1%83%D0%B4%D0%BE%D0%B1%D0%BD%D1%8B%D0%B9%20%D1%82%D0%BE%D1%87%D0%BD%D1%8B%D0%B9%20%D0%B8%20%D0%BF%D0%BE%D0%BD%D1%8F%D1%82%D0%BD%D1%8B%D0%B9%20%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%20%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D1%8B%D1%85%20%D1%87%D0%B8%D1%81%D0%B5%D0%BB&url=https%3A%2F%2Fxn--80akjcielidvhr6cf.xn--p1ai%2F" class="uscl-item">
+              <span
+                data-item="vk"
+                title="Поделиться ВКонтакте"
+                class="ico_uscl_soc ico_uscl ico_uscl-vk uscl-vk"
+              ></span>
+            </a>
+            <a target="_blank" href="https://connect.ok.ru/dk?st.cmd=OAuth2Login&st.layout=w&st.redirect=%252Fdk%253Fcmd%253DWidgetSharePreview%2526amp%253Bst.cmd%253DWidgetSharePreview%2526amp%253Bst.title%253D%2525D1%252581%2525D0%2525BB%2525D1%252583%2525D1%252587%2525D0%2525B0%2525D0%2525B9%2525D0%2525BD%2525D0%2525BE%2525D0%2525B5%252B%2525D1%252587%2525D0%2525B8%2525D1%252581%2525D0%2525BB%2525D0%2525BE.%2525D1%252580%2525D1%252584%252B%2525E2%252580%252594%252B%2525D0%2525BF%2525D1%252580%2525D0%2525BE%2525D1%252581%2525D1%252582%2525D0%2525BE%2525D0%2525B9%252B%2525D1%252583%2525D0%2525B4%2525D0%2525BE%2525D0%2525B1%2525D0%2525BD%2525D1%25258B%2525D0%2525B9%252B%2525D1%252582%2525D0%2525BE%2525D1%252587%2525D0%2525BD%2525D1%25258B%2525D0%2525B9%252B%2525D0%2525B8%252B%2525D0%2525BF%2525D0%2525BE%2525D0%2525BD%2525D1%25258F%2525D1%252582%2525D0%2525BD%2525D1%25258B%2525D0%2525B9%252B%2525D0%2525B3%2525D0%2525B5%2525D0%2525BD%2525D0%2525B5%2525D1%252580%2525D0%2525B0%2525D1%252582%2525D0%2525BE%2525D1%252580%252B%2525D1%252581%2525D0%2525BB%2525D1%252583%2525D1%252587%2525D0%2525B0%2525D0%2525B9%2525D0%2525BD%2525D1%25258B%2525D1%252585%252B%2525D1%252587%2525D0%2525B8%2525D1%252581%2525D0%2525B5%2525D0%2525BB%2526amp%253Bst.shareUrl%253Dhttps%25253A%25252F%25252Fxn--80akjcielidvhr6cf.xn--p1ai%25252F&st._wt=1&st.client_id=-1"  class="uscl-item">
+              <span
+                data-item="ok"
+                title="Поделиться в OK.ru"
+                class="ico_uscl_soc ico_uscl ico_uscl-ok uscl-ok"
+              ></span>
+            </a>
+            <a target="_blank" href="https://telegram.me/share/url?url=https%3A%2F%2Fxn--80akjcielidvhr6cf.xn--p1ai%2F" class="uscl-item">
+              <span
+                data-item="telegram"
+                title="Поделиться в Telegram"
+                class="ico_uscl_soc ico_uscl ico_uscl-telegram uscl-telegram"
+              ></span>
+            </a>
+            <a class="uscl-item" target="_blank" href="https://api.whatsapp.com/send?text=https%3A%2F%2Fxn--80akjcielidvhr6cf.xn--p1ai%2F">
+              <span
+                data-item="wa"
+                title="Поделиться в WhatsApp"
+                class="ico_uscl_soc ico_uscl ico_uscl-wa uscl-wa"
+              ></span>
+            </a>
+            <div class="uscl-item--bookmarks uscl-item">
+              <a
+                data-item="bookmarks"
+                href="#"
+                rel="sidebar"
+                title="случайное число.рф — простой удобный точный и понятный генератор случайных чисел"
+                class="ico_uscl ico_uscl-bookmarks uscl-bookmarks"
+              ></a>
+            </div>
+            <div class="uscl-item uscl-slide">
+              <span class="uscl-slide-close ico_uscl-arrow ico_uscl"></span>
+            </div>
+          </div>
+          <span class="uscl-slide-open ico_uscl-like"></span>
+          <div id="uSocial-popup" class="uscl-popup">
+            <div class="uscl-popup-background"></div>
+            <div class="uscl-popup-dialog">
+              <div class="uscl-popup-header">
+                <div class="uscl-popup-headline"></div>
+                <span class="uscl-popup-close ico_uscl ico_uscl-close"></span>
+              </div>
+              <div class="uscl-popup-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="btn js-to-png">СКАЧАТЬ РЕЗУЛЬТАТ</div>
     </div>
 
