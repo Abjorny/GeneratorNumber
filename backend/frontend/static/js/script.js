@@ -5,7 +5,9 @@ let availableNumbersFromSettings = [];
 let usedSettingsNumbers = [];
 let lastMin = null;
 let lastMax = null;
-let settingsData = JSON.parse(document.getElementById("settings-json").textContent || "[]");
+let settingsData = JSON.parse(
+  document.getElementById("settings-json").textContent || "[]"
+);
 
 function updateAvailableNumbers(min, max, callback = null) {
   fetch("/api/settings/")
@@ -86,7 +88,6 @@ $(document).ready(function () {
     let repeatsMode = document.getElementById("repeats").checked;
     let OutNums = [];
     $(".out").css("display", "none");
-
     updateAvailableNumbers(min, max, function () {
       if (genMode == 1 || availableNumbersFromSettings.length > 0) {
         let numsA1 = [];
@@ -187,7 +188,8 @@ $(document).ready(function () {
             '<span class="digit small" id="out">Чисел больше нет</span>';
           document.getElementById("out-hide").innerHTML =
             document.getElementById("out").innerHTML;
-          document.getElementById("resetGenMode2").style.display = "inline-block";
+          document.getElementById("resetGenMode2").style.display =
+            "inline-block";
         }
       }
 
@@ -196,14 +198,20 @@ $(document).ready(function () {
       const d = new Date();
       const time_zone = Math.abs(d.getTimezoneOffset() / 60);
       $("#gmt-stop").text(time_zone);
-
       const h = String(d.getHours()).padStart(2, "0");
       const m = String(d.getMinutes()).padStart(2, "0");
       const s = String(d.getSeconds()).padStart(2, "0");
-      document.getElementById("clock-stop").innerHTML = `${h}:${m}:${s}`;
-
       const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
+      if (OutNums.length > 0) {
+        $("#time-go").hide();
+        $("#time-stop").show();
+      } else {
+        $("#time-stop").hide();
+        $("#time-go").show();
+      }
+      document.getElementById("clock-stop").innerHTML = `${h}:${m}:${s}`;
       document.getElementById("date-stop").innerHTML = format;
+
 
       $(".js-clipboard").text("СКОПИРОВАТЬ РЕЗУЛЬТАТ");
     });
@@ -234,6 +242,20 @@ $(document).ready(function () {
   });
 
   $("#resetGenMode2").click(resetList);
+  setInterval(function () {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2, "0");
+    const m = String(d.getMinutes()).padStart(2, "0");
+    const s = String(d.getSeconds()).padStart(2, "0");
+    document.getElementById("clock").innerHTML = `${h}:${m}:${s}`;
+  }, 1000);
+
+  setInterval(function () {
+    const d = new Date();
+    const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
+    document.getElementById("date").innerHTML = format;
+  }, 900);
+
 });
 
 function getRandomInt(min, max) {
