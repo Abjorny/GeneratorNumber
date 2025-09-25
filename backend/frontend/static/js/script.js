@@ -5,6 +5,7 @@ let availableNumbersFromSettings = [];
 let usedSettingsNumbers = [];
 let lastMin = null;
 let lastMax = null;
+let isGenerating = false; 
 let settingsData = JSON.parse(
   document.getElementById("settings-json").textContent || "[]"
 );
@@ -80,6 +81,9 @@ $(document).ready(function () {
   $("#gmt").text(time_zone);
 
   $(".js-generate").click(function () {
+    if (isGenerating) return; // если уже нажата — игнорируем
+    isGenerating = true;     // блокируем кнопку
+
     let min = parseInt(document.getElementById("min").value);
     let max = parseInt(document.getElementById("max").value);
     if (min > max) min = max;
@@ -215,6 +219,9 @@ $(document).ready(function () {
 
       $(".js-clipboard").text("СКОПИРОВАТЬ РЕЗУЛЬТАТ");
     });
+      setTimeout(() => {
+    isGenerating = false;
+  }, 250);
   });
 
   new Clipboard(".js-clipboard");
