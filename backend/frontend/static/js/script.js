@@ -5,7 +5,9 @@ let availableNumbersFromSettings = [];
 let usedSettingsNumbers = [];
 let lastMin = null;
 let lastMax = null;
-let isGenerating = false; 
+let isGenerating = false;
+let generatedNumbers = [];
+
 let settingsData = JSON.parse(
   document.getElementById("settings-json").textContent || "[]"
 );
@@ -20,10 +22,8 @@ function updateAvailableNumbers(min, max, callback = null) {
         availableNumbersFromSettings = setting.numbers
           .filter((num) => num.value >= min && num.value <= max && !num.flag)
           .map((num) => num.value);
-        usedSettingsNumbers = [];
       } else {
         availableNumbersFromSettings = [];
-        usedSettingsNumbers = [];
       }
 
       if (callback) callback();
@@ -31,7 +31,6 @@ function updateAvailableNumbers(min, max, callback = null) {
     .catch((error) => {
       console.error("Ошибка загрузки настроек:", error);
       availableNumbersFromSettings = [];
-      usedSettingsNumbers = [];
       if (callback) callback();
     });
 }
@@ -59,6 +58,7 @@ function resetList() {
   numsA = [];
   availableNumbersFromSettings = [];
   usedSettingsNumbers = [];
+  generatedNumbers = []; 
   allowResetGenList = true;
   document.getElementById("resetGenMode2").style.display = "none";
 
@@ -81,8 +81,8 @@ $(document).ready(function () {
   $("#gmt").text(time_zone);
 
   $(".js-generate").click(function () {
-    if (isGenerating) return; // если уже нажата — игнорируем
-    isGenerating = true;     // блокируем кнопку
+    if (isGenerating) return; 
+    isGenerating = true;
 
     let min = parseInt(document.getElementById("min").value);
     let max = parseInt(document.getElementById("max").value);
@@ -107,6 +107,7 @@ $(document).ready(function () {
             let val = numsA1[i];
             OutNums.push(val);
             usedSettingsNumbers.push(val);
+            generatedNumbers.push(val);
 
             fetch("/api/set-flag-by-value/", {
               method: "POST",
@@ -128,19 +129,17 @@ $(document).ready(function () {
 
           if (!repeatsMode) {
             numsA1 = numsA1.filter((n) => !OutNums.includes(n));
+            numsA1 = numsA1.filter((n) => !usedSettingsNumbers.includes(n));
+            numsA1 = numsA1.filter((n) => !generatedNumbers.includes(n));
           }
 
           if (count > numsA1.length) count = numsA1.length;
 
-          if (repeatsMode) {
+          if (numsA1.length > 0) {
             for (let i = 0; i < count; i++) {
               let RandIndex = getRandomInt(0, numsA1.length - 1);
               OutNums.push(numsA1[RandIndex]);
               numsA1.splice(RandIndex, 1);
-            }
-          } else {
-            for (let i = 0; i < count; i++) {
-              OutNums.push(getRandomInt(min, max));
             }
           }
         }
@@ -164,9 +163,12 @@ $(document).ready(function () {
           for (let i = min; i <= max; i++) {
             numsA.push(i);
           }
+          numsA = numsA.filter((n) => !generatedNumbers.includes(n));
+          numsA = numsA.filter((n) => !usedSettingsNumbers.includes(n));
           allowResetGenList = false;
           document.getElementById("resetGenMode2").style.display = "none";
         }
+
         if (count > numsA.length) count = numsA.length;
 
         for (let i = 0; i < count; i++) {
@@ -195,6 +197,9 @@ $(document).ready(function () {
           document.getElementById("resetGenMode2").style.display =
             "inline-block";
         }
+        OutNums.forEach((n) => {
+          if (!generatedNumbers.includes(n)) generatedNumbers.push(n);
+        });
       }
 
       $(".out").slideDown("1000");
@@ -216,12 +221,11 @@ $(document).ready(function () {
       document.getElementById("clock-stop").innerHTML = `${h}:${m}:${s}`;
       document.getElementById("date-stop").innerHTML = format;
 
-
       $(".js-clipboard").text("СКОПИРОВАТЬ РЕЗУЛЬТАТ");
     });
-      setTimeout(() => {
-    isGenerating = false;
-  }, 250);
+    setTimeout(() => {
+      isGenerating = false;
+    }, 250);
   });
 
   new Clipboard(".js-clipboard");
@@ -262,7 +266,6 @@ $(document).ready(function () {
     const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
     document.getElementById("date").innerHTML = format;
   }, 900);
-
 });
 
 function getRandomInt(min, max) {
