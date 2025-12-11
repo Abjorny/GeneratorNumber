@@ -58,7 +58,7 @@ function resetList() {
   numsA = [];
   availableNumbersFromSettings = [];
   usedSettingsNumbers = [];
-  generatedNumbers = []; 
+  generatedNumbers = [];
   allowResetGenList = true;
   document.getElementById("resetGenMode2").style.display = "none";
 
@@ -81,7 +81,7 @@ $(document).ready(function () {
   $("#gmt").text(time_zone);
 
   $(".js-generate").click(function () {
-    if (isGenerating) return; 
+    if (isGenerating) return;
     isGenerating = true;
 
     let min = parseInt(document.getElementById("min").value);
@@ -89,61 +89,57 @@ $(document).ready(function () {
     if (min > max) min = max;
     let count = parseInt(document.getElementById("count").value);
     if (count < 1) count = 1;
-    let repeatsMode = document.getElementById("repeats").checked;
+    let repeatsMode = !document.getElementById("repeats").checked;
     let OutNums = [];
     $(".out").css("display", "none");
-    updateAvailableNumbers(min, max, function () {
-      if (genMode == 1 || availableNumbersFromSettings.length > 0) {
-        let numsA1 = [];
 
-        if (availableNumbersFromSettings.length > 0) {
-          numsA1 = availableNumbersFromSettings.filter(
-            (n) => !usedSettingsNumbers.includes(n)
+    updateAvailableNumbers(min, max, function () {
+      console.log(repeatsMode, OutNums, count, genMode);
+      if (genMode == 1 ) {
+        let OutNums = [];
+        let availableForRandom = [];
+
+        let guaranteed = availableNumbersFromSettings.filter(
+          (n) => !usedSettingsNumbers.includes(n)
+        );
+
+        let guaranteedCount = Math.min(count, guaranteed.length);
+
+        guaranteed = shuffleArray(guaranteed.slice()); // перемешиваем
+
+        for (let i = 0; i < guaranteedCount; i++) {
+          let val = guaranteed[i];
+          OutNums.push(val);
+          usedSettingsNumbers.push(val);
+          generatedNumbers.push(val);
+
+          fetch("/api/set-flag-by-value/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ value: val }),
+          }).catch((err) => console.error("Ошибка отправки флага:", err));
+        }
+
+        let remainingCount = count - guaranteedCount;
+
+        if (remainingCount > 0) {
+          for (let i = min; i <= max; i++) {
+            availableForRandom.push(i);
+          }
+
+          availableForRandom = availableForRandom.filter(
+            (n) => !OutNums.includes(n)
           );
 
-          let guaranteedCount = Math.min(count, numsA1.length);
-
-          for (let i = 0; i < guaranteedCount; i++) {
-            let val = numsA1[i];
-            OutNums.push(val);
-            usedSettingsNumbers.push(val);
-            generatedNumbers.push(val);
-
-            fetch("/api/set-flag-by-value/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"),
-              },
-              body: JSON.stringify({ value: val }),
-            }).catch((error) => console.error("Ошибка отправки флага:", error));
-          }
-
-          count -= guaranteedCount;
-        }
-
-        if (count > 0) {
-          for (let i = min; i <= max; i++) {
-            numsA1.push(i);
-          }
-
-          if (!repeatsMode) {
-            numsA1 = numsA1.filter((n) => !OutNums.includes(n));
-            numsA1 = numsA1.filter((n) => !usedSettingsNumbers.includes(n));
-            numsA1 = numsA1.filter((n) => !generatedNumbers.includes(n));
-          }
-
-          if (count > numsA1.length) count = numsA1.length;
-
-          if (numsA1.length > 0) {
-            for (let i = 0; i < count; i++) {
-              let RandIndex = getRandomInt(0, numsA1.length - 1);
-              OutNums.push(numsA1[RandIndex]);
-              numsA1.splice(RandIndex, 1);
-            }
+          availableForRandom = shuffleArray(availableForRandom);
+          let take = Math.min(remainingCount, availableForRandom.length);
+          for (let i = 0; i < take; i++) {
+            OutNums.push(availableForRandom[i]);
           }
         }
-
         let startSpan =
           OutNums.length <= 4
             ? '<span class="digit big" id="out">'
@@ -158,50 +154,86 @@ $(document).ready(function () {
         if (OutNums.length === 0) {
           resetList();
         }
-      } else {
+      }     else {  // genMode == 2 — режим без повторений
         if (numsA.length == 0 && allowResetGenList) {
           for (let i = min; i <= max; i++) {
             numsA.push(i);
           }
           numsA = numsA.filter((n) => !generatedNumbers.includes(n));
-          numsA = numsA.filter((n) => !usedSettingsNumbers.includes(n));
           allowResetGenList = false;
           document.getElementById("resetGenMode2").style.display = "none";
         }
 
         if (count > numsA.length) count = numsA.length;
 
-        for (let i = 0; i < count; i++) {
+        let OutNums = [];
+
+        // === ПРИОРИТЕТ ДЛЯ ВСЕХ ДОСТУПНЫХ ЧИСЕЛ ИЗ SETTINGS ===
+        let guaranteed = availableNumbersFromSettings.filter(
+          (n) => numsA.includes(n) && !usedSettingsNumbers.includes(n)
+        );
+
+        // Перемешиваем, чтобы порядок был случайным среди гарантированных
+        guaranteed = shuffleArray(guaranteed.slice());
+
+        // Сколько гарантированных можем взять (не больше count и не больше доступных)
+        let guaranteedCount = Math.min(count, guaranteed.length);
+
+        for (let i = 0; i < guaranteedCount; i++) {
+          let val = guaranteed[i];
+          OutNums.push(val);
+
+          // Удаляем из основного пула
+          let indexInNumsA = numsA.indexOf(val);
+          if (indexInNumsA !== -1) numsA.splice(indexInNumsA, 1);
+
+          // Помечаем как использованные
+          usedSettingsNumbers.push(val);
+          generatedNumbers.push(val);
+
+          // Отправляем флаг на сервер
+          fetch("/api/set-flag-by-value/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ value: val }),
+          }).catch((err) => console.error("Ошибка отправки флага:", err));
+        }
+
+        // Оставшееся количество чисел добираем случайно
+        let remainingCount = count - guaranteedCount;
+
+        for (let i = 0; i < remainingCount; i++) {
+          if (numsA.length === 0) break;
           let RandIndex = getRandomInt(0, numsA.length - 1);
-          OutNums.push(numsA[RandIndex]);
+          let num = numsA[RandIndex];
+          OutNums.push(num);
           numsA.splice(RandIndex, 1);
         }
 
         $("#js-get-clip").html(OutNums.join(" "));
 
-        if (OutNums.length != 0) {
-          let startSpan = "";
-
-          if (count <= 4) startSpan = '<span class="digit big" id="out">';
-          else startSpan = '<span class="digit small" id="out">';
-
-          document.getElementById("out").innerHTML =
-            startSpan + OutNums.join(" ") + "</span>";
-          document.getElementById("out-hide").innerHTML =
-            startSpan + OutNums.join(" ") + "</span>";
+        if (OutNums.length !== 0) {
+          let startSpan = OutNums.length <= 4
+            ? '<span class="digit big" id="out">'
+            : '<span class="digit small" id="out">';
+          document.getElementById("out").innerHTML = startSpan + OutNums.join(" ") + "</span>";
+          document.getElementById("out-hide").innerHTML = startSpan + OutNums.join(" ") + "</span>";
         } else {
           document.getElementById("out").innerHTML =
             '<span class="digit small" id="out">Чисел больше нет</span>';
           document.getElementById("out-hide").innerHTML =
             document.getElementById("out").innerHTML;
-          document.getElementById("resetGenMode2").style.display =
-            "inline-block";
+          document.getElementById("resetGenMode2").style.display = "inline-block";
         }
+
+        // Добавляем все сгенерированные в общий список (на случай, если были не из settings)
         OutNums.forEach((n) => {
           if (!generatedNumbers.includes(n)) generatedNumbers.push(n);
         });
       }
-
       $(".out").slideDown("1000");
       $("html, body").animate({ scrollTop: $(".overlay").offset().top }, 500);
       const d = new Date();
@@ -222,6 +254,7 @@ $(document).ready(function () {
       document.getElementById("date-stop").innerHTML = format;
 
       $(".js-clipboard").text("СКОПИРОВАТЬ РЕЗУЛЬТАТ");
+
     });
     setTimeout(() => {
       isGenerating = false;
@@ -272,4 +305,12 @@ function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
