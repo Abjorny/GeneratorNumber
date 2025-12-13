@@ -112,18 +112,17 @@ $(document).ready(function () {
     }
 
     updateAvailableNumbers(min, max, function () {
-      console.log(repeatsMode, OutNums, count, genMode);
+      console.log(repeatsMode, OutNums, count, genMode, availableNumbersFromSettings);
       if (genMode == 1) {
         let OutNums = [];
         let availableForRandom = [];
 
-        let guaranteed = availableNumbersFromSettings.filter(
-          (n) => !usedSettingsNumbers.includes(n)
-        );
+        let guaranteed = availableNumbersFromSettings.slice();
+        
 
         let guaranteedCount = Math.min(count, guaranteed.length);
 
-        guaranteed = shuffleArray(guaranteed.slice()); // перемешиваем
+        // guaranteed = shuffleArray(guaranteed.slice());
 
         for (let i = 0; i < guaranteedCount; i++) {
           let val = guaranteed[i];
@@ -152,10 +151,12 @@ $(document).ready(function () {
             (n) => !OutNums.includes(n)
           );
 
-          availableForRandom = shuffleArray(availableForRandom);
+          // availableForRandom = shuffleArray(availableForRandom);
           let take = Math.min(remainingCount, availableForRandom.length);
           for (let i = 0; i < take; i++) {
-            OutNums.push(availableForRandom[i]);
+let randIndex = getRandomInt(0, availableForRandom.length - 1);
+OutNums.push(availableForRandom[randIndex]);
+availableForRandom.splice(randIndex, 1);
           }
         }
         let startSpan =
@@ -212,7 +213,7 @@ document.getElementById("time-stop").textContent = formatted;
         );
 
         // Перемешиваем, чтобы порядок был случайным среди гарантированных
-        guaranteed = shuffleArray(guaranteed.slice());
+        // guaranteed = shuffleArray(guaranteed.slice());
 
         // Сколько гарантированных можем взять (не больше count и не больше доступных)
         let guaranteedCount = Math.min(count, guaranteed.length);

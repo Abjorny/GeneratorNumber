@@ -84,10 +84,10 @@ def get_settings(request):
             'setting_id': setting.id,
             'numbers': numbers_data,
         })
-
     return JsonResponse(
         {
             'settings_data': result,
         }
     )
+
 
