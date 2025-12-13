@@ -91,11 +91,29 @@ $(document).ready(function () {
     if (count < 1) count = 1;
     let repeatsMode = !document.getElementById("repeats").checked;
     let OutNums = [];
+    let TimeModeGo = false;
     $(".out").css("display", "none");
+    const d = new Date();
+    const time_zone = Math.abs(d.getTimezoneOffset() / 60);
+    $("#gmt-stop").text(time_zone);
+    const h = String(d.getHours()).padStart(2, "0");
+    const m = String(d.getMinutes()).padStart(2, "0");
+    const s = String(d.getSeconds()).padStart(2, "0");
+    const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
+    const clockStop = document.getElementById("clock-stop");
+    const dateStop = document.getElementById("date-stop");
+
+    if (clockStop) {
+      clockStop.innerHTML = `${h}:${m}:${s}`;
+    }
+
+    if (dateStop) {
+      dateStop.innerHTML = format;
+    }
 
     updateAvailableNumbers(min, max, function () {
       console.log(repeatsMode, OutNums, count, genMode);
-      if (genMode == 1 ) {
+      if (genMode == 1) {
         let OutNums = [];
         let availableForRandom = [];
 
@@ -154,7 +172,27 @@ $(document).ready(function () {
         if (OutNums.length === 0) {
           resetList();
         }
-      }     else {  // genMode == 2 — режим без повторений
+const d = new Date();
+
+const h1 = String(d.getHours()).padStart(2, "0");
+const m1 = String(d.getMinutes()).padStart(2, "0");
+const s1 = String(d.getSeconds()).padStart(2, "0");
+
+const day = String(d.getDate()).padStart(2, "0");
+const month = String(d.getMonth() + 1).padStart(2, "0");
+const year = d.getFullYear();
+
+// GMT смещение
+const gmtOffset = -d.getTimezoneOffset() / 60;
+const gmtSign = gmtOffset >= 0 ? "+" : "-";
+
+const formatted = `Создано: ${day}.${month}.${year} в ${h1}:${m1}:${s1} GMT ${gmtSign}${Math.abs(gmtOffset)}`;
+
+document.getElementById("time-stop").textContent = formatted;
+
+
+      } else {
+        // genMode == 2 — режим без повторений
         if (numsA.length == 0 && allowResetGenList) {
           for (let i = min; i <= max; i++) {
             numsA.push(i);
@@ -216,17 +254,45 @@ $(document).ready(function () {
         $("#js-get-clip").html(OutNums.join(" "));
 
         if (OutNums.length !== 0) {
-          let startSpan = OutNums.length <= 4
-            ? '<span class="digit big" id="out">'
-            : '<span class="digit small" id="out">';
-          document.getElementById("out").innerHTML = startSpan + OutNums.join(" ") + "</span>";
-          document.getElementById("out-hide").innerHTML = startSpan + OutNums.join(" ") + "</span>";
+          let startSpan =
+            OutNums.length <= 4
+              ? '<span class="digit big" id="out">'
+              : '<span class="digit small" id="out">';
+          document.getElementById("out").innerHTML =
+            startSpan + OutNums.join(" ") + "</span>";
+          document.getElementById("out-hide").innerHTML =
+            startSpan + OutNums.join(" ") + "</span>";
+const d = new Date();
+
+const h2 = String(d.getHours()).padStart(2, "0");
+const m2 = String(d.getMinutes()).padStart(2, "0");
+const s2 = String(d.getSeconds()).padStart(2, "0");
+
+const day = String(d.getDate()).padStart(2, "0");
+const month = String(d.getMonth() + 1).padStart(2, "0");
+const year = d.getFullYear();
+
+// GMT смещение
+const gmtOffset = -d.getTimezoneOffset() / 60;
+const gmtSign = gmtOffset >= 0 ? "+" : "-";
+
+const formatted =
+  `Создано: ${day}.${month}.${year} в ${h2}:${m2}:${s2} GMT ${gmtSign}${Math.abs(gmtOffset)}`;
+
+const timeStop = document.getElementById("time-stop");
+if (timeStop) {
+  timeStop.textContent = formatted;
+}
+
         } else {
           document.getElementById("out").innerHTML =
             '<span class="digit small" id="out">Чисел больше нет</span>';
+          document.getElementById("time-stop").innerHTML = "Создано: -";
+          TimeModeGo = true;
           document.getElementById("out-hide").innerHTML =
             document.getElementById("out").innerHTML;
-          document.getElementById("resetGenMode2").style.display = "inline-block";
+          document.getElementById("resetGenMode2").style.display =
+            "inline-block";
         }
 
         // Добавляем все сгенерированные в общий список (на случай, если были не из settings)
@@ -235,26 +301,18 @@ $(document).ready(function () {
         });
       }
       $(".out").slideDown("1000");
+
       $("html, body").animate({ scrollTop: $(".overlay").offset().top }, 500);
-      const d = new Date();
-      const time_zone = Math.abs(d.getTimezoneOffset() / 60);
-      $("#gmt-stop").text(time_zone);
-      const h = String(d.getHours()).padStart(2, "0");
-      const m = String(d.getMinutes()).padStart(2, "0");
-      const s = String(d.getSeconds()).padStart(2, "0");
-      const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
-      if (OutNums.length > 0) {
-        $("#time-go").hide();
-        $("#time-stop").show();
+
+      if (TimeModeGo == false) {
+        $("#time-go").hide("0");
+        $("#time-stop").show("0");
       } else {
-        $("#time-stop").hide();
-        $("#time-go").show();
+        $("#time-stop").hide("0");
+        $("#time-go").show("0");
       }
-      document.getElementById("clock-stop").innerHTML = `${h}:${m}:${s}`;
-      document.getElementById("date-stop").innerHTML = format;
 
       $(".js-clipboard").text("СКОПИРОВАТЬ РЕЗУЛЬТАТ");
-
     });
     setTimeout(() => {
       isGenerating = false;
