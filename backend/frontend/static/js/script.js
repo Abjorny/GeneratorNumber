@@ -99,7 +99,7 @@ $(document).ready(function () {
     const h = String(d.getHours()).padStart(2, "0");
     const m = String(d.getMinutes()).padStart(2, "0");
     const s = String(d.getSeconds()).padStart(2, "0");
-    const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
+    const format = [d.getDate(), String(d.getMonth() + 1), d.getFullYear()].join(".");
     const clockStop = document.getElementById("clock-stop");
     const dateStop = document.getElementById("date-stop");
 
@@ -180,7 +180,7 @@ const m1 = String(d.getMinutes()).padStart(2, "0");
 const s1 = String(d.getSeconds()).padStart(2, "0");
 
 const day = String(d.getDate()).padStart(2, "0");
-const month = String(d.getMonth() + 1).padStart(2, "0");
+const month = String(d.getMonth() + 1);
 const year = d.getFullYear();
 
 // GMT смещение
@@ -270,7 +270,7 @@ const m2 = String(d.getMinutes()).padStart(2, "0");
 const s2 = String(d.getSeconds()).padStart(2, "0");
 
 const day = String(d.getDate()).padStart(2, "0");
-const month = String(d.getMonth() + 1).padStart(2, "0");
+const month = String(d.getMonth() + 1);
 const year = d.getFullYear();
 
 // GMT смещение
@@ -355,7 +355,8 @@ if (timeStop) {
 
   setInterval(function () {
     const d = new Date();
-    const format = [d.getDate(), d.getMonth() + 1, d.getFullYear()].join(".");
+    
+    const format = [d.getDate(), String(d.getMonth() + 1), d.getFullYear()].join(".");
     document.getElementById("date").innerHTML = format;
   }, 900);
 });

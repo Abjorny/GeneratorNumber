@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,10 +22,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script src="{% static 'js/html2canvas.min.js' %}"></script>
-<script src="{% static 'js/script.js' %}?v=2.0.0"></script>
+    <script src="{% static 'js/script.js' %}?v=2.0.0"></script>
 
     <style>
-
       .overlays {
         position: fixed;
         inset: 0;
@@ -44,8 +43,8 @@
         height: 160px;
       }
       .loader-ring {
-        width: 160px;
-        height: 160px;
+        width: 180px;
+        height: 180px;
         border: 14px solid #eee;
         border-top: 14px solid #1d74f5;
         border-radius: 50%;
@@ -94,7 +93,14 @@
       .slider-wrap {
         text-align: center;
         position: relative;
-        transform: rotate(-5.846355041356908deg);
+        position: relative;
+        height: 20vh;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
       }
       .track {
         width: 300px;
@@ -104,6 +110,8 @@
         position: relative;
         box-shadow: 0 0 20px 10px rgba(0, 51, 102, 0.5);
         overflow: hidden;
+        transform: rotate(-13.1883deg);
+       margin: 25.8041px 0px 0px -25.9713px;
       }
       .track::before {
         content: ">>>";
@@ -124,7 +132,10 @@
         left: 0;
         top: 0;
         cursor: pointer;
-        transition: left 0.3s, top 0.3s, box-shadow 0.3s;
+        transition:
+          left 0.3s,
+          top 0.3s,
+          box-shadow 0.3s;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -139,7 +150,7 @@
         color: #2b5ea6;
         font-weight: 600;
       }
-      .display-row{
+      .display-row {
         display: flex;
         flex-direction: row;
       }
@@ -148,14 +159,18 @@
       случайное число.рф — простой удобный точный и понятный генератор случайных
       чисел
     </title>
-      <style>
-    .block { display: none; }
-    .block.active { display: flex;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  width: 100%; }
-  </style>
+    <style>
+      .block {
+        display: none;
+      }
+      .block.active {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <div id="captchaBlock" class="block">{% include 'check_block.html' %}</div>
@@ -188,7 +203,7 @@
           const expire = Date.now() + 60 * 60 * 1000; // 1 час
           localStorage.setItem(
             "userAuth",
-            JSON.stringify({ verified: true, expire })
+            JSON.stringify({ verified: true, expire }),
           );
           captchaEl.classList.remove("active");
           contentEl.classList.add("active");
