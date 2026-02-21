@@ -44,11 +44,13 @@
       elapsed += step;
       if (elapsed >= countdownSeconds) {
         clearInterval(countdown);
-        sliderArea.style.display = "block";
-        document.querySelector(".progress-container").style.display = "none";
-        setTimeout(function () {
-          hint.style.opacity = 0.9;
-        }, 200);
+        // sliderArea.style.display = "block";
+        // document.querySelector(".progress-container").style.display = "none";
+        solved();
+        // setTimeout(function () {
+        //   hint.style.opacity = 0.9;
+        // }, 200);
+        
       } else {
         timerEl.textContent = elapsed.toFixed(1) + "s";
       }
