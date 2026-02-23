@@ -28,6 +28,19 @@
 
 <script>
   (function () {
+      try {
+    const saved = localStorage.getItem("userAuth");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.verified && data.expire > Date.now()) {
+        // пользователь уже верифицирован
+        document.getElementById("overlay").style.display = "none";
+        return; // останавливаем скрипт
+      } else {
+        localStorage.removeItem("userAuth");
+      }
+    }
+  } catch (e) {}
     var countdownSeconds = 2 + Math.random() * 3; 
     var step = 0.1;
 
@@ -127,10 +140,14 @@
         redirectTo = null;
       }
 
-      setTimeout(function () {
-        if (redirectTo) location.href = redirectTo;
-        else location.reload();
-      }, 600);
+setTimeout(function () {
+  if (redirectTo) {
+    location.href = "/";
+  } else {
+        location.href = "/";
+    // document.getElementById("overlay").style.display = "none";
+  }
+}, 600);
     }
 
     handle.addEventListener("mousedown", onPointerDown);
