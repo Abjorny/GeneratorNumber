@@ -8,7 +8,7 @@ from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import base64
-import uuid
+import uuid, random
 
 
 def index(request):
@@ -24,9 +24,10 @@ def index(request):
             'setting_id': setting.id,
             'numbers': numbers_data,
         })
-
+    
     return render(request, 'index.html', {
-        'settings_data': result
+        'settings_data': result,
+        'number': f"-{random.randint(1, 50)}"
     })
 
 

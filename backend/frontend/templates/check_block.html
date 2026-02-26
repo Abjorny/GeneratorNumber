@@ -11,7 +11,7 @@
     <div id="sliderArea" style="display: none">
       <div class="jYGvkJaWLt"></div>
       <div class="slider-wrap">
-        <div id="track" class="track">
+        <div id="track" class="track" style="transform: rotate({{number}}deg);">
           <div id="hint" class="hint">→</div>
           <div
             id="handle"
@@ -28,19 +28,7 @@
 
 <script>
   (function () {
-      try {
-    const saved = localStorage.getItem("userAuth");
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data.verified && data.expire > Date.now()) {
-        // пользователь уже верифицирован
-        document.getElementById("overlay").style.display = "none";
-        return; // останавливаем скрипт
-      } else {
-        localStorage.removeItem("userAuth");
-      }
-    }
-  } catch (e) {}
+      
     var countdownSeconds = 2 + Math.random() * 3; 
     var step = 0.1;
 
@@ -57,12 +45,11 @@
       elapsed += step;
       if (elapsed >= countdownSeconds) {
         clearInterval(countdown);
-        // sliderArea.style.display = "block";
-        // document.querySelector(".progress-container").style.display = "none";
-        solved();
-        // setTimeout(function () {
-        //   hint.style.opacity = 0.9;
-        // }, 200);
+        sliderArea.style.display = "block";
+        document.querySelector(".progress-container").style.display = "none";
+        setTimeout(function () {
+          hint.style.opacity = 0.9;
+        }, 200);
         
       } else {
         timerEl.textContent = elapsed.toFixed(1) + "s";
@@ -139,15 +126,10 @@
       } catch (e) {
         redirectTo = null;
       }
-
-setTimeout(function () {
-  if (redirectTo) {
-    location.href = "/";
-  } else {
-        location.href = "/";
-    // document.getElementById("overlay").style.display = "none";
-  }
-}, 600);
+      setTimeout(function () {
+        if (redirectTo) location.href = redirectTo;
+        else location.reload();
+      }, 600);
     }
 
     handle.addEventListener("mousedown", onPointerDown);
