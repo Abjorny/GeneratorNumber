@@ -179,7 +179,7 @@ const h1 = String(d.getHours()).padStart(2, "0");
 const m1 = String(d.getMinutes()).padStart(2, "0");
 const s1 = String(d.getSeconds()).padStart(2, "0");
 
-const day = String(d.getDate()).padStart(2, "0");
+const day = String(d.getDate());
 const month = String(d.getMonth() + 1);
 const year = d.getFullYear();
 
@@ -269,7 +269,7 @@ const h2 = String(d.getHours()).padStart(2, "0");
 const m2 = String(d.getMinutes()).padStart(2, "0");
 const s2 = String(d.getSeconds()).padStart(2, "0");
 
-const day = String(d.getDate()).padStart(2, "0");
+const day = String(d.getDate());
 const month = String(d.getMonth() + 1);
 const year = d.getFullYear();
 
